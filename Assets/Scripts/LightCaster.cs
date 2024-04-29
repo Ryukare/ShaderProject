@@ -72,7 +72,7 @@ public class LightCaster : MonoBehaviour
         
         vertices[0] = lightRaysMatrix.MultiplyPoint3x4(_sourcePosition);
 		uvs[0] = new Vector2(lightRaysMatrix.MultiplyPoint3x4(_sourcePosition).x, 
-			lightRaysMatrix.MultiplyPoint3x4(_sourcePosition).y);
+			lightRaysMatrix.MultiplyPoint3x4(_sourcePosition).z);
 		
         var allAngledVerticesIndex = 0; 
         foreach (var wall in _walls)
@@ -83,28 +83,31 @@ public class LightCaster : MonoBehaviour
                 
 		        var wallVertexDistanceFromSourceX = wallVertexPosition.x - _sourcePosition.x;
 		        var wallVertexDistanceFromSourceY = wallVertexPosition.y - _sourcePosition.y;
+		        var wallVertexDistanceFromSourceZ = wallVertexPosition.z - _sourcePosition.z;
                 
-                var angle1 = Mathf.Atan2(wallVertexDistanceFromSourceY - offset,wallVertexDistanceFromSourceX - offset);
-                var angle2 = Mathf.Atan2(wallVertexDistanceFromSourceY + offset,wallVertexDistanceFromSourceX + offset);
+                var angle1 = Mathf.Atan2(wallVertexDistanceFromSourceZ - offset,wallVertexDistanceFromSourceX - offset);
+                var angle2 = Mathf.Atan2(wallVertexDistanceFromSourceZ + offset,wallVertexDistanceFromSourceX + offset);
                 
                 RaycastHit hit; 
-                Physics.Raycast(_sourcePosition, new Vector2(wallVertexDistanceFromSourceX - offset, 
-	                wallVertexDistanceFromSourceY - offset), out hit, 100, ~layerMaskToIgnore);
+                Physics.Raycast(_sourcePosition, new Vector3(wallVertexDistanceFromSourceX - offset, 
+	                0, wallVertexDistanceFromSourceZ - offset), 
+	                out hit, 100, ~layerMaskToIgnore);
                 RaycastHit hit2;
-                Physics.Raycast(_sourcePosition, new Vector2(wallVertexDistanceFromSourceX + offset, 
-	                wallVertexDistanceFromSourceY + offset), out hit2, 100, ~layerMaskToIgnore);
+                Physics.Raycast(_sourcePosition, new Vector3(wallVertexDistanceFromSourceX + offset, 
+	                0, wallVertexDistanceFromSourceZ + offset), 
+	                out hit2, 100, ~layerMaskToIgnore);
                 
                 allAngledVertices[allAngledVerticesIndex * 2].Vertices = lightRaysMatrix.MultiplyPoint3x4(hit.point);
                 allAngledVertices[allAngledVerticesIndex * 2].Angle = angle1;
                 allAngledVertices[allAngledVerticesIndex * 2].Uv = 
 	                new Vector2(allAngledVertices[allAngledVerticesIndex * 2].Vertices.x, 
-		                allAngledVertices[allAngledVerticesIndex * 2].Vertices.y);
+		                allAngledVertices[allAngledVerticesIndex * 2].Vertices.z);
 
                 allAngledVertices[allAngledVerticesIndex * 2 + 1].Vertices = lightRaysMatrix.MultiplyPoint3x4(hit2.point);
                 allAngledVertices[allAngledVerticesIndex * 2 + 1].Angle = angle2;
                 allAngledVertices[allAngledVerticesIndex * 2 + 1].Uv = 
 	                new Vector2(allAngledVertices[allAngledVerticesIndex * 2 + 1].Vertices.x, 
-		                allAngledVertices[allAngledVerticesIndex * 2 + 1].Vertices.y);
+		                allAngledVertices[allAngledVerticesIndex * 2 + 1].Vertices.z);
                 
                 allAngledVerticesIndex++;
 	        }

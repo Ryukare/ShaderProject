@@ -39,28 +39,6 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         _rigidbody.velocity = new Vector3(_xInput, 0, _zInput).normalized * speed;
-        //FlipX();
+        
     }
-    
-    // private void FlipX()
-    // {
-    //     bodySpriteRenderer.flipX = _xInput switch
-    //     {
-    //         > 0 => false,
-    //         < 0 => true,
-    //         _ => bodySpriteRenderer.flipX
-    //     };
-    //     rightLegSpriteRenderer.flipX = _xInput switch
-    //     {
-    //         > 0 => false,
-    //         < 0 => true,
-    //         _ => rightLegSpriteRenderer.flipX
-    //     };
-    //     leftLegSpriteRenderer.flipX = _xInput switch
-    //     {
-    //         > 0 => false,
-    //         < 0 => true,
-    //         _ => leftLegSpriteRenderer.flipX
-    //     };
-    // }
 }
